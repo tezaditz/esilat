@@ -6,6 +6,7 @@ use App\Models\Backend\Master\Rkakl;
 use App\Models\Backend\Master\Status;
 use App\Models\Backend\Pengajuan\DetailAkun;
 use App\Models\Backend\Pengajuan\DetailKegiatan;
+// use App\Models\Backend\Pengajuan\PilihAkun;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -28,6 +29,9 @@ class DetailKegiatanController extends Controller
 
         foreach ($request->checkbox as $key => $value) {
             if ($request->jumlah[$key]) {
+
+                // return $request->jumlah[$key];
+
                 $akun = Rkakl::where('id', $request->rkakl_id[$key])->first();
 
                 $arr_explode = explode(".", $akun->no_mak);
@@ -40,7 +44,10 @@ class DetailKegiatanController extends Controller
                     $getakun     = $arr_explode[7];
                 }
 
+                // return $getakun;
                 $uraianakun = Rkakl::where('kode', 'like', '%' . $getakun . '%')->first();
+
+
 
                 Rkakl::where('kode', 'like', '%' . $getakun . '%')
                     ->update([
@@ -48,7 +55,9 @@ class DetailKegiatanController extends Controller
                         'vol2' => $request->satvol[$key],
                     ]);
 
+                    // return $cek . "|" . $getakun;
                 if ($cek != $getakun) {
+
                     $detailakun = new DetailAkun();
 
                     $detailakun->akun        = $getakun;
@@ -63,8 +72,10 @@ class DetailKegiatanController extends Controller
                     $totalakun = $totalakun + str_replace('.', '', $request->jumlah[$key]);
                 }
 
-                $sisapagu = $uraianakun->jumlah - ($uraianakun->realisasi_2 + $uraianakun->realisasi_3);
-
+                $sisapagu = $akun->jumlah - ($akun->realisasi_2 + $akun->realisasi_3);
+                // $sisapagu = $akun->jumlah - ($akun->realisasi);
+                
+                // return $totalakun;
 
                 $no_mak  = explode(".", $akun->no_mak_sys);
 
@@ -78,7 +89,7 @@ class DetailKegiatanController extends Controller
                 $detailkegiatan->akun         = $getakun;
                 $detailkegiatan->uraian       = $akun->uraian;
                 $detailkegiatan->vol1         = 1;
-                $detailkegiatan->vol2         = $request->satvol[$key];
+                $detailkegiatan->vol2         = 1;
                 $detailkegiatan->satuan       = $request->sat[$key];
                 $detailkegiatan->status_id    = $status_id->id;
                 $detailkegiatan->sisa_pagu    = $sisapagu;
@@ -99,17 +110,29 @@ class DetailKegiatanController extends Controller
                     $detailkegiatan->kode_0       = $no_mak[7];
                 }
 
-                
+                // return $request->jumlah[$key];
                 
                 $detailkegiatan->hrgsat       = str_replace('.', '', $request->hargasat[$key]);
                 $detailkegiatan->jml_rph      = str_replace('.', '', $request->jumlah[$key]);
 
+
+
                 $detailkegiatan->save();
+
             }
         }
-
+        
         DetailAkun::where('akun', 'like', '%' . $getakun . '%')
         ->update(['jumlah' => $totalakun]);
+
+        // rkakl::where('id' , $rkakl[0]['id'])
+        // ->update(['jumlah' => $sisapagu]);
+
+        // PilihAkun::where();
+
+        // rkakl::where('id' , $rkakl[0]['id'])
+        // ->update(['realisasi' => $totalakun]);
+
 
         DetailKegiatan::where('kegiatan_id', $kegiatan_id)
             ->where('uraian' , 'LIKE' , '%honor%')
@@ -124,6 +147,10 @@ class DetailKegiatanController extends Controller
             ->where('uraian' , 'LIKE' , '%fullday%')
             ->where('uraian' , 'LIKE' , '%paket%')
             ->update(['sptjbflag' => 1]);
+
+        // PilihAkun::where('kegiatan_id' , $kegiatan_id)
+        //     ->update(['jumlah' => $sisapagu, 'sisa_pagu' => $sisapagu]);
+            
 
         \Session::flash('success', trans('backend/pengajuan.kegiatan.submodule.pilih_akun.store.messages.success'));
         return redirect()->route('pengajuan.kegiatan.detail-akun', $kegiatan_id)->withInput();

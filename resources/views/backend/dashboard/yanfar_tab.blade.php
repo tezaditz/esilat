@@ -35,7 +35,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartbelanja_yanfar"></canvas>
+                    <!-- <canvas id="chartbelanja_yanfar"></canvas> -->
+                    <div id="chartbelanja_yanfar" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -56,7 +57,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartTupoksi_yanfar"></canvas>
+                    <!-- <canvas id="chartTupoksi_yanfar"></canvas> -->
+                    <div id="chartTupoksi_yanfar" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -77,7 +79,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartRm_yanfar"></canvas>
+                    <!-- <canvas id="chartRm_yanfar"></canvas> -->
+                    <div id="chartRm_yanfar" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -100,7 +103,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartRealisasi_yanfar"></canvas>
+                    <!-- <canvas id="chartRealisasi_yanfar"></canvas> -->
+                    <div id="chartRealisasi_yanfar" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -121,7 +125,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartSPM_yanfar"></canvas>
+                    <!-- <canvas id="chartSPM_yanfar"></canvas> -->
+                    <div id="chartSPM_yanfar" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -143,7 +148,8 @@
             <div class="box-body">
                 <div class="chart">
                 <div id="canvas-holder1" class="text-center" style="width: 100%">
-                <canvas id="chartpengadaan_yanfar"></canvas>
+                <!-- <canvas id="chartpengadaan_yanfar"></canvas> -->
+                <div id="chartpengadaan_yanfar" style="width:100%; height:400px;"></div>
                 
                 </div>
                 </div>

@@ -49,9 +49,15 @@ class PilihAkunController extends Controller
                 $insert->sisa_pagu   = $value->jumlah - ($value->vol_pengajuan - $value->vol_2 - $value->vol_3);
                 $insert->sisa_vol    = 0;
 
+
+                // $sisa = $value->jumlah - $value->hargasat;
+
+                // return $sisa;
                 $insert->save();
             }
         }
+
+
 
         $pilihakuns = PilihAkun::where('kegiatan_id', $kegiatan_id)->get();
 

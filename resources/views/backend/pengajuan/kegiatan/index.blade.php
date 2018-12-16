@@ -179,6 +179,7 @@
                     data: {judul: judul},
                     dataType: 'json',
                     success: function(result) {
+                        console.log(result);
                         var maks_data = result.maks_data;
                         var $no_mak = $("#no_mak");
                         $no_mak.empty();

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Input;
 use Maatwebsite\Excel\Facades\Excel;
 use DB;
 use Auth;
+use App\Models\Backend\Rpd;
 
 class UploadController extends Controller
 {
@@ -146,7 +147,18 @@ class UploadController extends Controller
             $y = $y + 1;
 
 
+            $getbagianid = rpd::where('no_mak' , $nomak)
+                                ->where('level' , 11)
+                                ->get(['bagian_id']);
+
+            
+            $insert['bagian_id'] = $getbagianid[0];
+
+
+            if(strlen($value->kode) !=0){
+
             DB::table('rkakl_upload')->insert($insert);
+            }
         }
         $kode9 = "";$kode4 = "";$kode8 = "";$kode6 = "";$kode7 = "";$kode11 = "";$kode0 = "";$x = 1;$y = 0;
         $data = Excel::selectSheets('MATRIKS')->load($file_path)->get();
@@ -245,7 +257,21 @@ class UploadController extends Controller
 
             $x = $x + 1;
             $y = $y + 1;
+            
+            $getbagianid = rpd::where('no_mak' , $nomak)
+                                ->where('level' , 11)
+                                ->get(['bagian_id']);
+
+            return $getbagianid;
+            $insert2['bagian_id'] = $getbagianid;
+
+
+
+            if(strlen($value->kode) !=0){
+            
             DB::table('matriks_upload')->insert($insert2);
+            
+            }
         }
 
         return back();

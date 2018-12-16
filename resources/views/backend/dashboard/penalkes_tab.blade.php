@@ -15,6 +15,7 @@
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
                     <canvas id="chartrpd_penalkes"></canvas>
+                    <!-- <div id="chartrpd_penalkes" style="width:100%; height:400px;"></div> -->
                     
                     </div>
                     </div>
@@ -35,7 +36,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartbelanja_penalkes"></canvas>
+                    <!-- <canvas id="chartbelanja_penalkes"></canvas> -->
+                    <div id="chartbelanja_penalkes" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -56,7 +58,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartTupoksi_penalkes"></canvas>
+                    <!-- <canvas id="chartTupoksi_penalkes"></canvas> -->
+                    <div id="chartTupoksi_penalkes" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -77,7 +80,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartRm_penalkes"></canvas>
+                    <!-- <canvas id="chartRm_penalkes"></canvas> -->
+                    <div id="chartRm_penalkes" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -100,7 +104,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartRealisasi_penalkes"></canvas>
+                    <!-- <canvas id="chartRealisasi_penalkes"></canvas> -->
+                    <div id="chartRealisasi_penalkes" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -122,7 +127,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartSPM_penalkes"></canvas>
+                    <!-- <canvas id="chartSPM_penalkes"></canvas> -->
+                    <div id="chartSPM_penalkes" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -146,7 +152,8 @@
             <div class="box-body">
                 <div class="chart">
                 <div id="canvas-holder1" class="text-center" style="width: 100%">
-                <canvas id="chartpengadaan_penalkes"></canvas>
+                <!-- <canvas id="chartpengadaan_penalkes"></canvas> -->
+                <div id="chartpengadaan_penalkes" style="width:100%; height:400px;"></div>
                 
                 </div>
                 </div>

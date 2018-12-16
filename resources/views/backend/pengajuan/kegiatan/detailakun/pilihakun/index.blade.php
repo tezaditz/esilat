@@ -35,17 +35,18 @@
                             <tr>
                                 <th>@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.no_mak')</th>
                                 <th>@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.uraian')</th>
-                                <th colspan="2">@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.vol')</th>
-                                <th>@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.hargasat')</th>
-                                <th>@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.jumlah')</th>
+                                <!-- <th colspan="2">@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.vol')</th>
+                                <th>@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.hargasat')</th> -->
+                                <th>@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.pagu')</th>
                                 <th>@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.realisai')</th>
                                 <th>@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.sisa_pagu')</th>
-                                {{--<th>@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.sisa_vol')</th>--}}
-                                <th colspan="2">@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.vol')</th>
+                                <!-- {{--<th>@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.sisa_vol')</th>--}} -->
+                                <!-- <th colspan="2">@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.vol')</th> -->
                                 <th>@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.hrg_pengajuan')</th>
                                 <th>@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.total')</th>
                                 <th>@lang('backend/pengajuan.kegiatan.submodule.pilih_akun.tables.sisa_anggaran')</th>
                                 <th></th>
+
                             </tr>
                             @foreach($pilihakuns as $key => $pilihakun)
                                 @if($pilihakun->level == 7)
@@ -59,42 +60,49 @@
                                 @endif
                                         <td>{{ $pilihakun->kode }}</td>
                                         <td>{{ $pilihakun->uraian }}</td>
-                                        @if($pilihakun->hargasat > 0)
+                                        <!-- @if($pilihakun->hargasat > 0)
                                             <td class="text-right">{{ $pilihakun->vol }}</td>
                                         @else
                                             <td></td>
-                                        @endif
-                                        <td>
+                                        @endif -->
+                                        <!-- <td>
                                             {{ $pilihakun->sat }}
                                             <input type="hidden" name="sat[{{ $pilihakun->id }}]" value="{{ $pilihakun->sat }}">
-                                        </td>
-                                        @if($pilihakun->hargasat > 0)
+                                        </td> -->
+                                        <!-- @if($pilihakun->hargasat > 0)
                                             <td class="text-right">{{ number_format($pilihakun->hargasat, 0, ',', '.') }}</td>
-                                            <td class="text-right">{{ number_format($pilihakun->hargasat * $pilihakun->vol, 0, ',', '.') }}</td>
-                                        @else
-                                            <td></td>
-                                            <td></td>
+                                            <td class="text-right">{{ number_format($pilihakun->hargasat * $pilihakun->vol, 0, ',', '.') }}</td> -->
+                                        <!-- @else -->
+                                            <!-- <td></td> -->
+                                        @if($pilihakun->level == 11)
+                                            <td class="text-right">{{ number_format(($pilihakun->rkakl->jumlah)), 0, ',', '.'  }}</td>
                                         @endif
+                                        <!-- @endif -->
                                         @if($pilihakun->header)
                                             <td colspan="2"></td>
                                         @else
-                                            <td class="text-right">{{ number_format($pilihakun->rkakl->realisasi + $pilihakun->rkakl->realisasi_2 + $pilihakun->rkakl->realisasi_3, 0, ',', '.') }}</td>
-                                            <td class="text-right">{{ number_format($pilihakun->jumlah - ($pilihakun->rkakl->realisasi + $pilihakun->rkakl->realisasi_2 + $pilihakun->rkakl->realisasi_3), 0, ',', '.') }}</td>
+                                            @if($pilihakun->level == 11)
+                                                <td class="text-right">{{ number_format($pilihakun->rkakl->realisasi + $pilihakun->rkakl->realisasi_2 + $pilihakun->rkakl->realisasi_3, 0, ',', '.') }}</td>
+                                                <td class="text-right">{{ number_format($pilihakun->jumlah - ($pilihakun->rkakl->realisasi + $pilihakun->rkakl->realisasi_2 + $pilihakun->rkakl->realisasi_3), 0, ',', '.') }}</td>
+                                            @else
+                                                <td ></td>
+                                                <td ></td>
+                                            @endif
                                         @endif
                                         {{--<td class="text-center">--}}
-                                            {{--@if($pilihakun->level == 0 && $pilihakun->header == 0)--}}
+                                            {{--@if($pilihakun->level == 11)--}}
                                                 {{--{{ $pilihakun->vol - ($pilihakun->vol_pengajuan + $pilihakun->vol_2 + $pilihakun->vol_3) }}--}}
                                             {{--@endif--}}
                                         {{--</td>--}}
-                                        @if($pilihakun->hargasat > 0)
-                                            <td>
+                                        @if($pilihakun->level == 11)
+                                            <!-- <td>
                                                 @if($pilihakun->vol - ($pilihakun->vol_pengajuan + $pilihakun->vol_2 + $pilihakun->vol_3) > 0)
-                                                    <input class="form-control input-sm" style="text-align: right; width: 60px" id="satvol{{ $pilihakun->id }}" name="satvol[{{ $pilihakun->id }}]" placeholder="0" min="1" max="{{ $pilihakun->vol - ($pilihakun->vol_pengajuan + $pilihakun->vol_2 + $pilihakun->vol_3) }}" type="number" onfocus="this.select();" onmouseup="return false;" readonly>
+                                                    <input class="form-control input-sm" style="text-align: right; width: 60px" id="satvol{{ $pilihakun->id }}" name="satvol[{{ $pilihakun->id }}]" placeholder="0" min="1"  type="number" onfocus="this.select();" onmouseup="return false;" readonly>
                                                 @else
-                                                    <input class="form-control input-sm" style="text-align: right; width: 60px" id="satvol{{ $pilihakun->id }}" name="satvol[{{ $pilihakun->id }}]" placeholder="0" min="1" max="{{ $pilihakun->vol - ($pilihakun->vol_pengajuan + $pilihakun->vol_2 + $pilihakun->vol_3) }}" type="number" onfocus="this.select();" onmouseup="return false;" readonly>
+                                                    <input class="form-control input-sm" style="text-align: right; width: 60px" id="satvol{{ $pilihakun->id }}" name="satvol[{{ $pilihakun->id }}]" placeholder="0" min="1" type="number" onfocus="this.select();" onmouseup="return false;" readonly>
                                                 @endif
-                                            </td>
-                                            <td>{{ $pilihakun->sat }}</td>
+                                            </td> -->
+                                            <!-- <td>{{ $pilihakun->sat }}</td> -->
                                             <td>
                                                 @if($pilihakun->vol - ( $pilihakun->vol_pengajuan + $pilihakun->vol_2 + $pilihakun->vol_3 ) > 0)
                                                     <input class="form-control input-sm" style="text-align: right; width: 110px;" id="hargasat{{ $pilihakun->id }}" name="hargasat[{{ $pilihakun->id }}]" type="text" onfocus="this.select();" onmouseup="return false;" readonly placeholder="0">
@@ -105,24 +113,23 @@
                                             <td><input class="form-control input-sm" style="text-align: right; width: 110px;" id="jumlah{{ $pilihakun->id }}" name="jumlah[{{ $pilihakun->id }}]" placeholder="0" type="text" readonly></td>
                                             <td><input class="form-control input-sm" style="text-align: right; width: 110px;" id="sisa_anggaran{{ $pilihakun->id }}" name="sisa_anggaran[{{ $pilihakun->id }}]" placeholder="0" type="text" readonly></td>
                                         @else
-                                            <td></td>
+                                            <!-- <td></td>
+                                            <td></td> -->
                                             <td></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
                                         @endif
                                         <td>
-                                            @if($pilihakun->level == 0)
-                                                @if($pilihakun->vol - ( $pilihakun->vol_pengajuan + $pilihakun->vol_2 + $pilihakun->vol_3 ) > 0)
-                                                    @if($pilihakun->hargasat > 0)
+                                            @if($pilihakun->level == 11)
+                                                
+                                                    
                                                         <input type="hidden" name="rkakl_id[{{ $pilihakun->id }}]" value="{{ $pilihakun->rkakl_id }}">
-                                                        @if(($pilihakun->jumlah - ($pilihakun->rkakl->realisasi + $pilihakun->rkakl->realisasi_2 + $pilihakun->rkakl->realisasi_3)) != 0)
+                                                        
                                                         <input type="checkbox" id="checkbox{{ $pilihakun->id }}" name="checkbox[{{ $pilihakun->id }}]" value="{{ $pilihakun->rkakl_id }}">
-                                                        @endif
-                                                    @else
-                                                        {{----}}
-                                                    @endif
-                                                @endif
+                                                        
+                                                    
+                                               
                                             @endif
                                         </td>
                                     </tr>
@@ -149,15 +156,19 @@
                     if($('#checkbox{{ $pilihakun->id }}:checked').length) {
                         $('[name="satvol[{{ $pilihakun->id }}]"]').attr('readonly',false);
                         $('[name="hargasat[{{ $pilihakun->id }}]"]').attr('readonly',false);
-                        $('[name="satvol[{{ $pilihakun->id }}]"]').val('1');
+                        // $('[name="satvol[{{ $pilihakun->id }}]"]').val('1');
                         $('[name="hargasat[{{ $pilihakun->id }}]"]').val('{{ number_format($pilihakun->hargasat ,0, ',', '.') }}');
                         {{--$('[name="hargasat[{{ $pilihakun->id }}]"]').val('0');--}}
                         $('[name="jumlah[{{ $pilihakun->id }}]"]').val('{{ number_format($pilihakun->hargasat ,0, ',', '.') }}');
-                        $('[name="sisa_anggaran[{{ $pilihakun->id }}]"]').val('{{ number_format(($pilihakun->jumlah - ($pilihakun->realisasi + $pilihakun->realisasi_2 + $pilihakun->realisasi_3)) - $pilihakun->hargasat ,0, ',', '.') }}');
+                        // $('[name="sisa_anggaran[{{ $pilihakun->id }}]"]').val('{{ number_format(($pilihakun->hargasat))}}');
+
+                        $('[name="sisa_anggaran[{{ $pilihakun->id }}]"]').val('{{ number_format($pilihakun->jumlah - ($pilihakun->rkakl->realisasi + $pilihakun->rkakl->realisasi_2 + $pilihakun->rkakl->realisasi_3) - $pilihakun->hargasat , 0, ',', '.') }}');
+
+                        // $('[name="sisa_anggaran[{{ $pilihakun->id }}]"]').val('{{ number_format(($pilihakun->jumlah - ($pilihakun->realisasi + $pilihakun->realisasi_2 + $pilihakun->realisasi_3)) - $pilihakun->hargasat ,0, ',', '.') }}');
                     } else {
                         $('[name="satvol[{{ $pilihakun->id }}]"]').attr('readonly',true);
                         $('[name="hargasat[{{ $pilihakun->id }}]"]').attr('readonly',true);
-                        $('[name="satvol[{{ $pilihakun->id }}]"]').val('0');
+                        // $('[name="satvol[{{ $pilihakun->id }}]"]').val('0');
                         $('[name="hargasat[{{ $pilihakun->id }}]"]').val('0');
                         $('[name="jumlah[{{ $pilihakun->id }}]"]').val('0');
                         $('[name="sisa_anggaran[{{ $pilihakun->id }}]"]').val('0');
@@ -174,10 +185,10 @@
                     $('#jumlah{{ $pilihakun->id }}').val(jumlah.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1."));
                     $('#sisa_anggaran{{ $pilihakun->id }}').val(sisa_anggaran.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1."));
 
-                    if ($('#satvol{{ $pilihakun->id }}').val() > {{ $pilihakun->vol }} || jumlah > {{ $pilihakun->jumlah - $pilihakun->rkakl->realisasi_3 }}) {
-                        alert('Volume tidak sesuai, silahkan masukin ulang.');
-                        $('#satvol{{ $pilihakun->id }}').val('1');
-                    }
+                    // if ($('#satvol{{ $pilihakun->id }}').val() > {{ $pilihakun->vol }} || jumlah > {{ $pilihakun->jumlah - $pilihakun->rkakl->realisasi_3 }}) {
+                    //     alert('Volume tidak sesuai, silahkan masukin ulang.');
+                    //     $('#satvol{{ $pilihakun->id }}').val('1');
+                    // }
                 });
 
                 $('#hargasat{{ $pilihakun->id }}').keyup(function(){
@@ -188,9 +199,9 @@
 
                     var hargasat = parseFloat($(this).val().replace(/\./g, ''));
 
-                    var volume = parseFloat($('#satvol{{ $pilihakun->id }}').val());
+                    // var volume = parseFloat($('#satvol{{ $pilihakun->id }}').val());
                     var jumlah = parseFloat($(this).val().replace(/\./g, ''));
-                    jumlah = (jumlah ? volume * hargasat : "0");
+                    jumlah = (jumlah ?  hargasat : "0"); //volume *
                     var sisa_anggaran = parseFloat($(this).val().replace(/\./g, ''));
                     sisa_anggaran = (sisa_anggaran ? {{ $pilihakun->jumlah - $pilihakun->rkakl->realisasi_3 }} - jumlah : "0");
 

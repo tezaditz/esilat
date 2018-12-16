@@ -72,7 +72,7 @@ class KegiatanController extends Controller
 
         $rkakls  = DB::select("select * FROM rkakl WHERE no_mak_sys IN (SELECT SUBSTR(no_mak , 1 , 22) FROM rpd WHERE LEVEL = 7 and bagian_id = " . \Auth::user()->bagian_id . " GROUP BY SUBSTR(no_mak , 1 , 22)) and tahun = " . $tahun_ang['value'] . " and eselon_id = " . $bageselon['eselon_id'] . " ");
         
-
+        // return $rkakls;
 
         // $rkakls    = Rkakl::where('level', '=', 6)
         //                     ->where('tahun' , '=' , $tahun_ang['value'])
@@ -157,11 +157,11 @@ class KegiatanController extends Controller
                         ->get();
             
 
-            if($rpk->count() == 0)
-            {
-                \Session::flash('error', trans('backend/monitoring/rpd.rpk_kegiatan.messages.is_empty'));
-                return redirect()->route('pengajuan.kegiatan.index');
-            }
+            // if($rpk->count() == 0)
+            // {
+            //     \Session::flash('error', trans('backend/monitoring/rpd.rpk_kegiatan.messages.is_empty'));
+            //     return redirect()->route('pengajuan.kegiatan.index');
+            // }
         //================================================================================================//
 
 
@@ -367,6 +367,8 @@ class KegiatanController extends Controller
         foreach ($detail as $key => $value) {
             $rkakl = Rkakl::where('no_mak_sys', $value->rincian_akun)->first();
 
+            // return $rkakl;
+
             $sisapagu = $rkakl->jumlah - ($rkakl->realisasi + $rkakl->realisasi_2 + $rkakl->realisasi_3);
 
             DetailKegiatan::where('id', '=', $value->id)
@@ -390,14 +392,34 @@ class KegiatanController extends Controller
             $transaksi->keterangan  = 'Kegiatan';
             $transaksi->tanggal     = $kegiatan->tgl_pengajuan;
 
+
+            // return $value->rincian_akun;
             $transaksi->save();
+
+            $rkakl = Rkakl::where('no_mak_sys', '=', $value->rincian_akun)->get();
+
+            // return $rkakl;
+            // return $total;
+            if($rkakl[0]['realisasi'] == 0)
+            {
+                // return $value->rincian_akun;
+                $update_rkakl = rkakl::where('no_mak_sys' ,$value->rincian_akun)
+                                    ->update(['realisasi' => $total]);
+            }
+            else
+            {
+
+                $getNilai = $rkakl[0]['realisasi'] + $total;
+                $update_rkakl = rkakl::where('id' , $rkakl[0]['id'])->update(['realisasi' => $getNilai]);   
+            }
+            
         }
 
         Kegiatan::where('id', $id)
             ->update(['total_realisasi' => $total]);
 
         $status_id = Status::where('kode_status', 'DT01')->first();
-        $this->hitungRealisasi($status_id->id, 'realisasi', 'vol_pengajuan', 'jml_rph');
+        // $this->hitungRealisasi($status_id->id, 'realisasi', 'vol_pengajuan', 'jml_rph');
 
         $kegiatan     = Kegiatan::where('id', '=', $id)->first();
         $tglPengajuan = Carbon::parse($kegiatan->tgl_pengajuan);

@@ -76,8 +76,13 @@
             </div>
             <div class="box-body">
                 <div id="canvas-holder" class="text-center" style="width: 100%">
-                <canvas id="mycanvas"></canvas>
-                <div id="js-legend" class="chart-legend"></div>
+                <!-- <canvas id="mycanvas"></canvas> -->
+                <!-- <div id="js-legend" class="chart-legend"></div> -->
+                <!-- <div id="container" style="width:100%; "></div> -->
+                <div class="chart">
+                <div id="container" style="width:100%; height:400px;"></div>
+                
+                </div>
                 </div>
             </div>
         </div>
@@ -99,9 +104,10 @@
             <div class="box-body">
                 <div class="chart">
                 <div id="canvas-holder1" class="text-center" style="width: 100%">
-                <canvas id="chartRealisasi"></canvas>
-                
-                </div>
+                <!-- <canvas id="chartRealisasi"></canvas> -->
+                    <div id="chartRealisasi" style="width:100%;"></div>
+                    
+                    </div>
                 </div>
             </div>
         </div>
@@ -124,10 +130,11 @@
             </div>
             <div class="box-body">
                 <div class="chart">
-                <div id="canvas-holder1" class="text-center" style="width: 100%">
-                <canvas id="chartspmsp2d"></canvas>
-                
-                </div>
+                    <div id="canvas-holder1" class="text-center" style="width: 100%">
+                    <!-- <canvas id="chartspmsp2d"></canvas> -->
+                        <div id="chartspmsp2d" style="width:100%;"></div>
+                        
+                    </div>
                 </div>
             </div>
         </div>
@@ -184,10 +191,11 @@
             </div>
             <div class="box-body">
                 <div class="chart">
-                <div id="canvas-holder1" class="text-center" style="width: 100%">
-                <canvas id="charttupoksi"></canvas>
-                
-                </div>
+                    <div id="canvas-holder1" class="text-center" style="width: 100%">
+                    <!-- <canvas id="charttupoksi"></canvas> -->
+                    <div id="charttupoksi" style="width:100%;"></div>
+                    
+                    </div>
                 </div>
             </div>
         </div>
@@ -208,7 +216,8 @@
             <div class="box-body">
                 <div class="chart">
                 <div id="canvas-holder1" class="text-center" style="width: 100%">
-                <canvas id="chartpengadaan"></canvas>
+                <!-- <canvas id="chartpengadaan"></canvas> -->
+                    <div id="chartpengadaan" style="width:100%;"></div>
                 
                 </div>
                 </div>
