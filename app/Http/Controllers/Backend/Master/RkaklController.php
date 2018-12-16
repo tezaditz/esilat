@@ -13,6 +13,7 @@ use App\Models\Backend\Parameter;
 use App\Models\Backend\Master\user_eselon;
 use Auth;
 use DB;
+use App\Models\Backend\Rpd;
 
 class RkaklController extends Controller
 {
@@ -120,6 +121,19 @@ class RkaklController extends Controller
                         }
                     }
 
+                    if (strlen($value->kode) != 0 ) {
+                        
+                     $getbagianid = rpd::where('no_mak' , $no_mak)
+                                ->get(['bagian_id']);
+
+                    $bagianID = 0;
+                    if(Count($getbagianid))
+                    {
+                        $bagianID =  $getbagianid[0]['bagian_id'];    
+                    }                    
+
+
+
 
                     $insert[] = [
                         'no_rkakl'   => $no,
@@ -135,10 +149,17 @@ class RkaklController extends Controller
                         'sdana'      => $value->sdana,
                         'tahun'      => $tahunAng['value'],
                         'eselon_id'  => $userEselon['eselon_id'],
+                        'bagian_id'  => $bagianID,
                         'created_at' => Carbon::now(),
                         'updated_at' => Carbon::now(),
                     ];
+
+                   
                 }
+                }
+
+                        
+                
                 if (!empty($insert)) {
 
                     $tahunAng = parameter::where('id' , '=' , 1)->first();
@@ -147,10 +168,13 @@ class RkaklController extends Controller
 
 
                     // $data = DB::delete('delete FROM rkakl JOIN eselon_rkakl ON rkakl.`id` = eselon_rkakl.`rkakl_id` WHERE eselon_rkakl.`eselon_id` = :eselonid AND rkakl.`tahun` = :tahun' , ['eselonid' => $userEselon , 'tahun' => $tahunAng['value'] ]);
+
                     rkakl::where('tahun' , '=' , $tahunAng['value'])
                             ->where('eselon_id' , '=' , $userEselon)->delete();
+                        
+                        
+                            
                     Rkakl::insert($insert);
-                    
                     
                     Rkakl::where('uraian', 'like', '%>>%')
                         ->update(['header' => 2]);

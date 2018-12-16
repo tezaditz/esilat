@@ -105,11 +105,12 @@
 
         $.getJSON('{{ url("/getpie") }}', function (result) {
 
+            // console.log(result['pagu']);
             var data1 = [] , data2 = [] , data3 =[];
             var nilaiAlokasi = 0 , nilaiRealisasi = 0 , nilaiSisa = 0;
             var percentRealisasi = 0 , percentSisa = 0;
             var len = result.length;
-            var ctx = $("#mycanvas").get(0).getContext("2d");
+            // var ctx = $("#mycanvas").get(0).getContext("2d");
 
             for (var i = 0; i < len; i++) {
 
@@ -125,59 +126,43 @@
                 
             }
 
-
-            var config = {
-                    type: 'pie',
-                    data: {
-                        datasets: [{
-                            label: "DATA",
-                            data: [
-                               data1,data2
-                            ],
-                            backgroundColor: [
-                                "green",
-                                "blue",
-                            ]
-                        }],
-                        labels: [
-                            "Alokasi",
-                            "Realisasi"
-                        ]
+            var myChart = Highcharts.chart('container', {
+                   chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
                     },
-                    options: {
-                        responsive: true,
-                        tooltips: {
-                          callbacks: {
-                            // this callback is used to create the tooltip label
-                            label: function(tooltipItem, data) {
-                              // get the data label and data value to display
-                              // convert the data value to local string so it uses a comma seperated number
-                              var dataLabel = data.labels[tooltipItem.index];
-                              var value = ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toLocaleString();
-
-                              // make this isn't a multi-line label (e.g. [["label 1 - line 1, "line 2, ], [etc...]])
-                              if (Chart.helpers.isArray(dataLabel)) {
-                                // show value on first line of multiline label
-                                // need to clone because we are changing the value
-                                dataLabel = dataLabel.slice();
-                                dataLabel[0] += value;
-                              } else {
-                                dataLabel += value;
-                              }
-
-                              // return the text to display on the tooltip
-                              return dataLabel;
+                    title: {
+                        text: 'REALISASI'
+                    },
+                    tooltip: {
+                        pointFormat: ''
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                connectorColor: 'silver'
                             }
-                          }
                         }
-                    }
-                };
-
-            var myPieChart = new Chart(ctx, config);
+                    },
+                    series: [{
+                        name: 'Share',
+                        data: [
+                            { name: 'Alokasi', y: nilaiAlokasi },
+                            { name: 'Realisasi', y: nilaiRealisasi }
+                        ]
+                    }]
+                });
         });
 
         $.getJSON('{{ url("/getjenisbelanja") }}', function (result) {
 
+            console.log(result[0]);
             var data51 = [] , data52 = [] , data53 = [] , namasatker = [] , jnsblnj = [];
 
             for (var i = 0; i < result['rkakl'].length; i++) {
@@ -200,57 +185,49 @@
                 jnsblnj.push(result['Jnsblj'][i].description);
             }
 
-            var data = {
-              labels: namasatker,
-              datasets: [{
-                label: jnsblnj[0],
-                backgroundColor: "blue",
-                data: data51
-              }, {
-                label: jnsblnj[1],
-                backgroundColor: "red",
-                data: data52
-              }, {
-                label: jnsblnj[2],
-                backgroundColor: "green",
-                data: data53
-              }]
-            };
+            console.log(result);
 
-
-            var ctx = document.getElementById("chartRealisasi").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              datasets: data,   
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartRealisasi', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Perjenis Belanja'
+                },
+                xAxis: {
+                    categories: jnsblnj,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Belanja Pegawai',
+                    data: data51
+
+                }, {
+                    name: 'Belanja Pegawai',
+                    data: data52
+
+                }, {
+                    name: 'Belanja Modal',
+                    data: data53
+
+                }]
             });
         });
 
         // SPM
+
         $.getJSON('{{ url("/get_spm/0") }}', function (result) {
+
+            console.log(result[0]);
 
             var nama_satker =[] , nilai_alokasi = [] , nilai_pengajuan = [] , nilai_spm = [] , nilai_sp2d = [];
 
@@ -265,57 +242,50 @@
 
                 }
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Pengajuan",
-                backgroundColor: "blue",
-                data: nilai_pengajuan
-              }, {
-                label: "SPM",
-                backgroundColor: "red",
-                data: nilai_spm
-              }, {
-                label: "SP2D",
-                backgroundColor: "green",
-                data: nilai_sp2d
-              }]
-            };
 
+            console.log(result);
 
-            var ctx = document.getElementById("chartspmsp2d").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartspmsp2d', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi SPM SP2D'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Pengajuan',
+                    data: nilai_pengajuan
+
+                }, {
+                    name: 'SPM',
+                    data: nilai_spm
+
+                }, {
+                    name: 'SP2D',
+                    data: nilai_sp2d
+
+                }]
             });
         });
 
-
         // TUPOKSI 
+
         $.getJSON('{{ url("/get_tupoksi") }}', function (result) {
+
+            console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , realisasi = [] ;
 
@@ -326,52 +296,45 @@
             }
 
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Alokasi",
-                backgroundColor: "green",
-                data: alokasi,
-              },{
-                label: "Realisasi",
-                backgroundColor: "blue",
-                data: realisasi,
-              }]
-            };
+            console.log(result);
 
-
-            var ctx = document.getElementById("charttupoksi").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('charttupoksi', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi SPM SP2D'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Realisasi',
+                    data: realisasi
+
+                }]
             });
         });
 
         // pengadaan 
+
         $.getJSON('{{ url("/get_pengadaan") }}', function (result) {
+
+            console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , nilai_kontrak = [] , pencairan = [] ;
 
@@ -383,56 +346,44 @@
             }
 
 
-            var data = {
-              labels: nama_satker,
-              datasets: [
-              {
-                label: "Alokasi",
-                backgroundColor: "blue",
-                data: alokasi,
-              },
-              {
-                label: "Nilai Kontrak",
-                backgroundColor: "yellow",
-                data: nilai_kontrak,
-              },
-              {
-                label: "Pencarian Kontrak",
-                backgroundColor: "green",
-                data: pencairan,
-              },]
-            };
+            console.log(result);
 
-
-            var ctx = document.getElementById("chartpengadaan").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartpengadaan', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Pengadaan'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Nilai Kontrak',
+                    data: nilai_kontrak
+
+                }, {
+                    name: 'Pencairan Kontrak',
+                    data: pencairan
+
+                }]
             });
         });
+
         // RM PNBP
         $.getJSON('{{ url("/get_pnbp") }}', function (result) {
 
@@ -602,13 +553,15 @@
             });
         });
             //Grafik PIE Realisasi , Saldo
+
         $.getJSON('{{ url("/get_pie_realisasi_eselon_dua/3") }}', function (result) {
 
+            // console.log(result['pagu']);
             var data1 = [] , data2 = [];
             var nilaiAlokasi = 0 , nilaiRealisasi = 0 , nilaiSisa = 0;
             var percentRealisasi = 0 , percentSisa = 0;
             var len = result.length;
-            var ctx = $("#chartRealisasi_ses").get(0).getContext("2d");
+            // var ctx = $("#chartRealisasi_ses").get(0).getContext("2d");
 
             for (var i = 0; i < len; i++) {
 
@@ -622,35 +575,43 @@
                 data1.push(percentRealisasi);
                 data2.push(percentSisa);
             }
-
-
-            var config = {
-                    type: 'pie',
-                    data: {
-                        datasets: [{
-                            label: "DATA",
-                            data: [
-                               data1,data2
-                            ],
-                            backgroundColor: [
-                                "blue",
-                                "red",
-                            ]
-                        }],
-                        labels: [
-                            "Realisasi",
-                            "Sisa Anggaran"
-                        ]
+            var myChart = Highcharts.chart('chartRealisasi_ses', {
+                   chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
                     },
-                    options: {
-                        responsive: true
-                    }
-                };
-
-            var myPieChart = new Chart(ctx, config);
+                    title: {
+                        text: 'REALISASI'
+                    },
+                    tooltip: {
+                        pointFormat: ''
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                connectorColor: 'silver'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Share',
+                        data: [
+                            { name: 'Realisasi', y: nilaiRealisasi },
+                            { name: 'Anggaran', y: nilaiSisa }
+                        ]
+                    }]
+                });
         });
             // Realisasi Per Belanja
         $.getJSON('{{ url("/getjenisbelanjaeselondua/3") }}', function (result) {
+
+            // console.log(result[0]);
 
             var data51 = [] , data52 = [] , data53 = [] , namasatker = [] , jnsblnj = [];
 
@@ -674,55 +635,47 @@
                 jnsblnj.push(result['Jnsblj'][i].description);
             }
 
-            var data = {
-              labels: namasatker,
-              datasets: [{
-                label: jnsblnj[0],
-                backgroundColor: "blue",
-                data: data51
-              }, {
-                label: jnsblnj[1],
-                backgroundColor: "red",
-                data: data52
-              }, {
-                label: jnsblnj[2],
-                backgroundColor: "green",
-                data: data53
-              }]
-            };
+            // console.log(pagu);
 
-
-            var ctx = document.getElementById("chartbelanja_ses").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartbelanja_ses', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Belanja'
+                },
+                xAxis: {
+                    categories: namasatker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Belanja Pegawai',
+                    data: data51
+
+                }, {
+                    name: 'Belanja Barang',
+                    data: data52
+
+                }, {
+                    name: 'Belanja Modal',
+                    data: data53
+
+                }]
             });
         });
-
+        
         $.getJSON('{{ url("/get_spm/3") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker =[] , nilai_alokasi = [] , nilai_pengajuan = [] , nilai_spm = [] , nilai_sp2d = [];
 
@@ -737,55 +690,49 @@
 
                 }
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Pengajuan",
-                backgroundColor: "blue",
-                data: nilai_pengajuan
-              }, {
-                label: "SPM",
-                backgroundColor: "red",
-                data: nilai_spm
-              }, {
-                label: "SP2D",
-                backgroundColor: "green",
-                data: nilai_sp2d
-              }]
-            };
+            // console.log(pagu);
 
-
-            var ctx = document.getElementById("chartSPM_ses").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartSPM_ses', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi SPM SP2D'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Pengajuan',
+                    data: nilai_pengajuan
+
+                }, {
+                    name: 'SPM',
+                    data: nilai_spm
+
+                }, {
+                    name: 'SP2D',
+                    data: nilai_sp2d
+
+                }]
             });
         });
-        // pengadaan 
+
+       
+        // pengadaan
         $.getJSON('{{ url("/get_pengadaaneselondua/3") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , nilai_kontrak = [] , pencairan = [] ;
 
@@ -796,59 +743,48 @@
                 pencairan.push(result[i].pencairan_kontrak);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: nama_satker,
-              datasets: [
-              {
-                label: "Alokasi",
-                backgroundColor: "blue",
-                data: alokasi,
-              },
-              {
-                label: "Nilai Kontrak",
-                backgroundColor: "yellow",
-                data: nilai_kontrak,
-              },
-              {
-                label: "Pencarian Kontrak",
-                backgroundColor: "green",
-                data: pencairan,
-              },]
-            };
-
-
-            var ctx = document.getElementById("chartpengadaan_eseolon_dua").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartpengadaan_eseolon_dua', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Pengadaan'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Nilai Kontrak',
+                    data: nilai_kontrak
+
+                }, {
+                    name: 'Pencairan Kontrak',
+                    data: pencairan
+
+                }]
             });
-        });
+        }); 
+        
             //Tupoksi Ses
         $.getJSON('{{ url("/get_tupoksi_eselon_dua/3") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , realisasi = [] ;
 
@@ -858,52 +794,44 @@
                 realisasi.push(result[i].realisasi);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Alokasi",
-                backgroundColor: "green",
-                data: alokasi,
-              },{
-                label: "Realisasi",
-                backgroundColor: "blue",
-                data: realisasi,
-              }]
-            };
-
-
-            var ctx = document.getElementById("chartTupoksi_ses").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartTupoksi_ses', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Tupoksi'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Realisasi',
+                    data: realisasi
+
+                }]
             });
         });
+        
             //Rm & Pnbp Ses
         $.getJSON('{{ url("/realisasi_pnbp_eselon_dua/3") }}', function (result) {
+
+            // console.log(result[0]);
 
             var kode_satker = [] , alokasi_rm = [] , rm = [] ,alokasi_pnbp =[], pnbp = [];
 
@@ -915,56 +843,48 @@
                 pnbp.push(result[i].pnbp);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: kode_satker,
-              datasets: [{
-                label: "Alokasi RM",
-                backgroundColor: "green",
-                data: alokasi_rm,
-              },{
-                label: "Rupiah Murni",
-                backgroundColor: "blue",
-                data: rm,
-              },{
-                label: "Alokasi PNBP",
-                backgroundColor: "yellow",
-                data: alokasi_pnbp,
-              },{
-                label: "PNBP",
-                backgroundColor: "red",
-                data: pnbp,
-              }]
-            };
-
-
-            var ctx = document.getElementById("chartRm_ses").getContext("2d");
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartRm_ses', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Tupoksi'
+                },
+                xAxis: {
+                    categories: kode_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi RM',
+                    data: alokasi_rm
+
+                }, {
+                    name: 'Rupiah Murni',
+                    data: rm
+
+                }, {
+                    name: 'Alokasi PNBP',
+                    data: alokasi_pnbp
+
+                }, {
+                    name: 'PNBP',
+                    data: pnbp
+
+                }]
             });
         });
+        
 
 // TAB OBLIK
             // Grafik Line RPD , RPD Revisi , Realisasi
@@ -1031,11 +951,12 @@
             //Grafik PIE Realisasi , Saldo
         $.getJSON('{{ url("/get_pie_realisasi_eselon_dua/6") }}', function (result) {
 
+            // console.log(result['pagu']);
             var data1 = [] , data2 = [];
             var nilaiAlokasi = 0 , nilaiRealisasi = 0 , nilaiSisa = 0;
             var percentRealisasi = 0 , percentSisa = 0;
             var len = result.length;
-            var ctx = $("#chartRealisasi_oblik").get(0).getContext("2d");
+            // var ctx = $("#chartRealisasi_oblik").get(0).getContext("2d");
 
             for (var i = 0; i < len; i++) {
 
@@ -1050,35 +971,44 @@
                 data2.push(percentSisa);
             }
 
-
-            var config = {
-                    type: 'pie',
-                    data: {
-                        datasets: [{
-                            label: "DATA",
-                            data: [
-                               data1,data2
-                            ],
-                            backgroundColor: [
-                                "blue",
-                                "red",
-                            ]
-                        }],
-                        labels: [
-                            "Realisasi",
-                            "Sisa Anggaran"
-                        ]
+            var myChart = Highcharts.chart('chartRealisasi_oblik', {
+                   chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
                     },
-                    options: {
-                        responsive: true
-                    }
-                };
-
-            var myPieChart = new Chart(ctx, config);
+                    title: {
+                        text: 'REALISASI'
+                    },
+                    tooltip: {
+                        pointFormat: ''
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                connectorColor: 'silver'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Share',
+                        data: [
+                            { name: 'Alokasi', y: nilaiAlokasi },
+                            { name: 'Realisasi', y: nilaiRealisasi }
+                        ]
+                    }]
+                });
         });
+        
             // Realisasi Per Belanja
         $.getJSON('{{ url("/getjenisbelanjaeselondua/6") }}', function (result) {
 
+            console.log(result[0]);
             var data51 = [] , data52 = [] , data53 = [] , namasatker = [] , jnsblnj = [];
 
             for (var i = 0; i < result['rkakl'].length; i++) {
@@ -1101,55 +1031,48 @@
                 jnsblnj.push(result['Jnsblj'][i].description);
             }
 
-            var data = {
-              labels: namasatker,
-              datasets: [{
-                label: jnsblnj[0],
-                backgroundColor: "blue",
-                data: data51
-              }, {
-                label: jnsblnj[1],
-                backgroundColor: "red",
-                data: data52
-              }, {
-                label: jnsblnj[2],
-                backgroundColor: "green",
-                data: data53
-              }]
-            };
+            // console.log(pagu);
 
-
-            var ctx = document.getElementById("chartbelanja_oblik").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartbelanja_oblik', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Per Belanja'
+                },
+                xAxis: {
+                    categories: namasatker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Belanja Pegawai',
+                    data: data51
+
+                }, {
+                    name: 'Belanja Barang',
+                    data: data52
+
+                }, {
+                    name: 'Belanja Modal',
+                    data: data53
+
+                }]
             });
         });
-
+        
+        // SPM SP2D
         $.getJSON('{{ url("/get_spm/6") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker =[] , nilai_alokasi = [] , nilai_pengajuan = [] , nilai_spm = [] , nilai_sp2d = [];
 
@@ -1164,56 +1087,49 @@
 
                 }
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Pengajuan",
-                backgroundColor: "blue",
-                data: nilai_pengajuan
-              }, {
-                label: "SPM",
-                backgroundColor: "red",
-                data: nilai_spm
-              }, {
-                label: "SP2D",
-                backgroundColor: "green",
-                data: nilai_sp2d
-              }]
-            };
+            // console.log(pagu);
 
-
-            var ctx = document.getElementById("chartSPM_oblik").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartSPM_oblik', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi SPM SP2D'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Pengajuan',
+                    data: nilai_pengajuan
+
+                }, {
+                    name: 'SPM',
+                    data: nilai_spm
+
+                }, {
+                    name: 'SP2D',
+                    data: nilai_sp2d
+
+                }]
             });
         });
+        
 
-        // pengadaan 
+        // pengadaan
         $.getJSON('{{ url("/get_pengadaaneselondua/6") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , nilai_kontrak = [] , pencairan = [] ;
 
@@ -1224,59 +1140,48 @@
                 pencairan.push(result[i].pencairan_kontrak);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: nama_satker,
-              datasets: [
-              {
-                label: "Alokasi",
-                backgroundColor: "blue",
-                data: alokasi,
-              },
-              {
-                label: "Nilai Kontrak",
-                backgroundColor: "yellow",
-                data: nilai_kontrak,
-              },
-              {
-                label: "Pencarian Kontrak",
-                backgroundColor: "green",
-                data: pencairan,
-              },]
-            };
-
-
-            var ctx = document.getElementById("chartpengadaan_oblik").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartpengadaan_oblik', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Pengadaan'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Nilai Kontrak',
+                    data: nilai_kontrak
+
+                }, {
+                    name: 'Pencairan Kontrak',
+                    data: pencairan
+
+                }]
             });
-        });
-            //Tupoksi Ses
+        });  
+        
+            //Tupoksi 
         $.getJSON('{{ url("/get_tupoksi_eselon_dua/6") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , realisasi = [] ;
 
@@ -1286,52 +1191,44 @@
                 realisasi.push(result[i].realisasi);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Alokasi",
-                backgroundColor: "green",
-                data: alokasi,
-              },{
-                label: "Realisasi",
-                backgroundColor: "blue",
-                data: realisasi,
-              }]
-            };
-
-
-            var ctx = document.getElementById("chartTupoksi_oblik").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartTupoksi_oblik', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Tupoksi'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Realisasi',
+                    data: realisasi
+
+                }]
             });
         });
-            //Rm & Pnbp Ses
+        
+            //Rm & Pnbp 
         $.getJSON('{{ url("/realisasi_pnbp_eselon_dua/6") }}', function (result) {
+
+            // console.log(result[0]);
 
             var kode_satker = [] , alokasi_rm = [] , rm = [] ,alokasi_pnbp =[], pnbp = [];
 
@@ -1343,56 +1240,48 @@
                 pnbp.push(result[i].pnbp);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: kode_satker,
-              datasets: [{
-                label: "Alokasi RM",
-                backgroundColor: "green",
-                data: alokasi_rm,
-              },{
-                label: "Rupiah Murni",
-                backgroundColor: "blue",
-                data: rm,
-              },{
-                label: "Alokasi PNBP",
-                backgroundColor: "yellow",
-                data: alokasi_pnbp,
-              },{
-                label: "PNBP",
-                backgroundColor: "red",
-                data: pnbp,
-              }]
-            };
-
-
-            var ctx = document.getElementById("chartRm_oblik").getContext("2d");
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartRm_oblik', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Tupoksi'
+                },
+                xAxis: {
+                    categories: kode_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi RM',
+                    data: alokasi_rm
+
+                }, {
+                    name: 'Rupiah Murni',
+                    data: rm
+
+                }, {
+                    name: 'Alokasi PNBP',
+                    data: alokasi_pnbp
+
+                }, {
+                    name: 'PNBP',
+                    data: pnbp
+
+                }]
             });
         });
+        
 
 
         // TAB yanfar
@@ -1460,11 +1349,12 @@
             //Grafik PIE Realisasi , Saldo
         $.getJSON('{{ url("/get_pie_realisasi_eselon_dua/4") }}', function (result) {
 
+            // console.log(result['pagu']);
             var data1 = [] , data2 = [];
             var nilaiAlokasi = 0 , nilaiRealisasi = 0 , nilaiSisa = 0;
             var percentRealisasi = 0 , percentSisa = 0;
             var len = result.length;
-            var ctx = $("#chartRealisasi_yanfar").get(0).getContext("2d");
+            // var ctx = $("#chartRealisasi_oblik").get(0).getContext("2d");
 
             for (var i = 0; i < len; i++) {
 
@@ -1479,35 +1369,44 @@
                 data2.push(percentSisa);
             }
 
-
-            var config = {
-                    type: 'pie',
-                    data: {
-                        datasets: [{
-                            label: "DATA",
-                            data: [
-                               data1,data2
-                            ],
-                            backgroundColor: [
-                                "blue",
-                                "red",
-                            ]
-                        }],
-                        labels: [
-                            "Realisasi",
-                            "Sisa Anggaran"
-                        ]
+            var myChart = Highcharts.chart('chartRealisasi_yanfar', {
+                   chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
                     },
-                    options: {
-                        responsive: true
-                    }
-                };
-
-            var myPieChart = new Chart(ctx, config);
+                    title: {
+                        text: 'REALISASI'
+                    },
+                    tooltip: {
+                        pointFormat: ''
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                connectorColor: 'silver'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Share',
+                        data: [
+                            { name: 'Alokasi', y: nilaiAlokasi },
+                            { name: 'Realisasi', y: nilaiRealisasi }
+                        ]
+                    }]
+                });
         });
+        
             // Realisasi Per Belanja
         $.getJSON('{{ url("/getjenisbelanjaeselondua/4") }}', function (result) {
 
+            // console.log(result[0]);
             var data51 = [] , data52 = [] , data53 = [] , namasatker = [] , jnsblnj = [];
 
             for (var i = 0; i < result['rkakl'].length; i++) {
@@ -1530,55 +1429,48 @@
                 jnsblnj.push(result['Jnsblj'][i].description);
             }
 
-            var data = {
-              labels: namasatker,
-              datasets: [{
-                label: jnsblnj[0],
-                backgroundColor: "blue",
-                data: data51
-              }, {
-                label: jnsblnj[1],
-                backgroundColor: "red",
-                data: data52
-              }, {
-                label: jnsblnj[2],
-                backgroundColor: "green",
-                data: data53
-              }]
-            };
+            // console.log(pagu);
 
-
-            var ctx = document.getElementById("chartbelanja_yanfar").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartbelanja_yanfar', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Per Belanja'
+                },
+                xAxis: {
+                    categories: namasatker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Belanja Pegawai',
+                    data: data51
+
+                }, {
+                    name: 'Belanja Barang',
+                    data: data52
+
+                }, {
+                    name: 'Belanja Modal',
+                    data: data53
+
+                }]
             });
         });
 
+        // SPM SP2D
         $.getJSON('{{ url("/get_spm/4") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker =[] , nilai_alokasi = [] , nilai_pengajuan = [] , nilai_spm = [] , nilai_sp2d = [];
 
@@ -1593,56 +1485,48 @@
 
                 }
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Pengajuan",
-                backgroundColor: "blue",
-                data: nilai_pengajuan
-              }, {
-                label: "SPM",
-                backgroundColor: "red",
-                data: nilai_spm
-              }, {
-                label: "SP2D",
-                backgroundColor: "green",
-                data: nilai_sp2d
-              }]
-            };
+            // console.log(pagu);
 
-
-            var ctx = document.getElementById("chartSPM_yanfar").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartSPM_yanfar', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi SPM SP2D'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Pengajuan',
+                    data: nilai_pengajuan
+
+                }, {
+                    name: 'SPM',
+                    data: nilai_spm
+
+                }, {
+                    name: 'SP2D',
+                    data: nilai_sp2d
+
+                }]
             });
         });
 
-        // pengadaan 
+        // pengadaan
         $.getJSON('{{ url("/get_pengadaaneselondua/4") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , nilai_kontrak = [] , pencairan = [] ;
 
@@ -1653,59 +1537,48 @@
                 pencairan.push(result[i].pencairan_kontrak);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: nama_satker,
-              datasets: [
-              {
-                label: "Alokasi",
-                backgroundColor: "blue",
-                data: alokasi,
-              },
-              {
-                label: "Nilai Kontrak",
-                backgroundColor: "yellow",
-                data: nilai_kontrak,
-              },
-              {
-                label: "Pencarian Kontrak",
-                backgroundColor: "green",
-                data: pencairan,
-              },]
-            };
-
-
-            var ctx = document.getElementById("chartpengadaan_yanfar").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartpengadaan_yanfar', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Pengadaan'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Nilai Kontrak',
+                    data: nilai_kontrak
+
+                }, {
+                    name: 'Pencairan Kontrak',
+                    data: pencairan
+
+                }]
             });
-        });
-            //Tupoksi Ses
+        });  
+
+            //Tupoksi
         $.getJSON('{{ url("/get_tupoksi_eselon_dua/4") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , realisasi = [] ;
 
@@ -1715,52 +1588,44 @@
                 realisasi.push(result[i].realisasi);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Alokasi",
-                backgroundColor: "green",
-                data: alokasi,
-              },{
-                label: "Realisasi",
-                backgroundColor: "blue",
-                data: realisasi,
-              }]
-            };
-
-
-            var ctx = document.getElementById("chartTupoksi_yanfar").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartTupoksi_oblik', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Tupoksi'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Realisasi',
+                    data: realisasi
+
+                }]
             });
         });
-            //Rm & Pnbp Ses
+        
+            //Rm & Pnbp
         $.getJSON('{{ url("/realisasi_pnbp_eselon_dua/4") }}', function (result) {
+
+            // console.log(result[0]);
 
             var kode_satker = [] , alokasi_rm = [] , rm = [] ,alokasi_pnbp =[], pnbp = [];
 
@@ -1772,58 +1637,48 @@
                 pnbp.push(result[i].pnbp);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: kode_satker,
-              datasets: [{
-                label: "Alokasi RM",
-                backgroundColor: "green",
-                data: alokasi_rm,
-              },{
-                label: "Rupiah Murni",
-                backgroundColor: "blue",
-                data: rm,
-              },{
-                label: "Alokasi PNBP",
-                backgroundColor: "yellow",
-                data: alokasi_pnbp,
-              },{
-                label: "PNBP",
-                backgroundColor: "red",
-                data: pnbp,
-              }]
-            };
-
-
-            var ctx = document.getElementById("chartRm_yanfar").getContext("2d");
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartRm_yanfar', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Tupoksi'
+                },
+                xAxis: {
+                    categories: kode_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi RM',
+                    data: alokasi_rm
+
+                }, {
+                    name: 'Rupiah Murni',
+                    data: rm
+
+                }, {
+                    name: 'Alokasi PNBP',
+                    data: alokasi_pnbp
+
+                }, {
+                    name: 'PNBP',
+                    data: pnbp
+
+                }]
             });
         });
-
-
+        
         // TAB FM
             // Grafik Line RPD , RPD Revisi , Realisasi
         $.getJSON('{{ url("/getrpdsummaryeselondua/5") }}', function (result) {
@@ -1899,11 +1754,12 @@
             //Grafik PIE Realisasi , Saldo
         $.getJSON('{{ url("/get_pie_realisasi_eselon_dua/5") }}', function (result) {
 
+            // console.log(result['pagu']);
             var data1 = [] , data2 = [];
             var nilaiAlokasi = 0 , nilaiRealisasi = 0 , nilaiSisa = 0;
             var percentRealisasi = 0 , percentSisa = 0;
             var len = result.length;
-            var ctx = $("#chartRealisasi_fm").get(0).getContext("2d");
+            // var ctx = $("#chartRealisasi_oblik").get(0).getContext("2d");
 
             for (var i = 0; i < len; i++) {
 
@@ -1918,35 +1774,44 @@
                 data2.push(percentSisa);
             }
 
-
-            var config = {
-                    type: 'pie',
-                    data: {
-                        datasets: [{
-                            label: "DATA",
-                            data: [
-                               data1,data2
-                            ],
-                            backgroundColor: [
-                                "blue",
-                                "red",
-                            ]
-                        }],
-                        labels: [
-                            "Realisasi",
-                            "Sisa Anggaran"
-                        ]
+            var myChart = Highcharts.chart('chartRealisasi_fm', {
+                   chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
                     },
-                    options: {
-                        responsive: true
-                    }
-                };
-
-            var myPieChart = new Chart(ctx, config);
+                    title: {
+                        text: 'REALISASI'
+                    },
+                    tooltip: {
+                        pointFormat: ''
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                connectorColor: 'silver'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Share',
+                        data: [
+                            { name: 'Alokasi', y: nilaiAlokasi },
+                            { name: 'Realisasi', y: nilaiRealisasi }
+                        ]
+                    }]
+                });
         });
-            // Realisasi Per Belanja
+        
+        // Realisasi Per Belanja
         $.getJSON('{{ url("/getjenisbelanjaeselondua/5") }}', function (result) {
 
+            // console.log(result[0]);
             var data51 = [] , data52 = [] , data53 = [] , namasatker = [] , jnsblnj = [];
 
             for (var i = 0; i < result['rkakl'].length; i++) {
@@ -1969,55 +1834,48 @@
                 jnsblnj.push(result['Jnsblj'][i].description);
             }
 
-            var data = {
-              labels: namasatker,
-              datasets: [{
-                label: jnsblnj[0],
-                backgroundColor: "blue",
-                data: data51
-              }, {
-                label: jnsblnj[1],
-                backgroundColor: "red",
-                data: data52
-              }, {
-                label: jnsblnj[2],
-                backgroundColor: "green",
-                data: data53
-              }]
-            };
+            // console.log(pagu);
 
-
-            var ctx = document.getElementById("chartbelanja_fm").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartbelanja_fm', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Per Belanja'
+                },
+                xAxis: {
+                    categories: namasatker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Belanja Pegawai',
+                    data: data51
+
+                }, {
+                    name: 'Belanja Barang',
+                    data: data52
+
+                }, {
+                    name: 'Belanja Modal',
+                    data: data53
+
+                }]
             });
         });
 
+        // SPM SP2D
         $.getJSON('{{ url("/get_spm/5") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker =[] , nilai_alokasi = [] , nilai_pengajuan = [] , nilai_spm = [] , nilai_sp2d = [];
 
@@ -2032,56 +1890,48 @@
 
                 }
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Pengajuan",
-                backgroundColor: "blue",
-                data: nilai_pengajuan
-              }, {
-                label: "SPM",
-                backgroundColor: "red",
-                data: nilai_spm
-              }, {
-                label: "SP2D",
-                backgroundColor: "green",
-                data: nilai_sp2d
-              }]
-            };
+            // console.log(pagu);
 
-
-            var ctx = document.getElementById("chartSPM_fm").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartSPM_fm', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi SPM SP2D'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Pengajuan',
+                    data: nilai_pengajuan
+
+                }, {
+                    name: 'SPM',
+                    data: nilai_spm
+
+                }, {
+                    name: 'SP2D',
+                    data: nilai_sp2d
+
+                }]
             });
         });
 
-        // pengadaan 
+        // pengadaan
         $.getJSON('{{ url("/get_pengadaaneselondua/5") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , nilai_kontrak = [] , pencairan = [] ;
 
@@ -2092,60 +1942,48 @@
                 pencairan.push(result[i].pencairan_kontrak);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: nama_satker,
-              datasets: [
-              {
-                label: "Alokasi",
-                backgroundColor: "blue",
-                data: alokasi,
-              },
-              {
-                label: "Nilai Kontrak",
-                backgroundColor: "yellow",
-                data: nilai_kontrak,
-              },
-              {
-                label: "Pencarian Kontrak",
-                backgroundColor: "green",
-                data: pencairan,
-              },]
-            };
-
-
-            var ctx = document.getElementById("chartpengadaan_fm").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartpengadaan_fm', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Pengadaan'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Nilai Kontrak',
+                    data: nilai_kontrak
+
+                }, {
+                    name: 'Pencairan Kontrak',
+                    data: pencairan
+
+                }]
             });
         });
 
-            //Tupoksi Ses
+        //Tupoksi Ses
         $.getJSON('{{ url("/get_tupoksi_eselon_dua/5") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , realisasi = [] ;
 
@@ -2155,53 +1993,44 @@
                 realisasi.push(result[i].realisasi);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Alokasi",
-                backgroundColor: "green",
-                data: alokasi,
-              },{
-                label: "Realisasi",
-                backgroundColor: "blue",
-                data: realisasi,
-              }]
-            };
-
-
-            var ctx = document.getElementById("chartTupoksi_fm").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartTupoksi_fm', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Tupoksi'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Realisasi',
+                    data: realisasi
+
+                }]
             });
         });
-
-            //Rm & Pnbp Ses
+        
+        //Rm & Pnbp Ses
         $.getJSON('{{ url("/realisasi_pnbp_eselon_dua/5") }}', function (result) {
+
+            // console.log(result[0]);
 
             var kode_satker = [] , alokasi_rm = [] , rm = [] ,alokasi_pnbp =[], pnbp = [];
 
@@ -2213,54 +2042,45 @@
                 pnbp.push(result[i].pnbp);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: kode_satker,
-              datasets: [{
-                label: "Alokasi RM",
-                backgroundColor: "green",
-                data: alokasi_rm,
-              },{
-                label: "Rupiah Murni",
-                backgroundColor: "blue",
-                data: rm,
-              },{
-                label: "Alokasi PNBP",
-                backgroundColor: "yellow",
-                data: alokasi_pnbp,
-              },{
-                label: "PNBP",
-                backgroundColor: "red",
-                data: pnbp,
-              }]
-            };
-
-
-            var ctx = document.getElementById("chartRm_fm").getContext("2d");
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartRm_fm', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Tupoksi'
+                },
+                xAxis: {
+                    categories: kode_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi RM',
+                    data: alokasi_rm
+
+                }, {
+                    name: 'Rupiah Murni',
+                    data: rm
+
+                }, {
+                    name: 'Alokasi PNBP',
+                    data: alokasi_pnbp
+
+                }, {
+                    name: 'PNBP',
+                    data: pnbp
+
+                }]
             });
         });
 
@@ -2329,11 +2149,12 @@
             //Grafik PIE Realisasi , Saldo
         $.getJSON('{{ url("/get_pie_realisasi_eselon_dua/1") }}', function (result) {
 
+            // console.log(result['pagu']);
             var data1 = [] , data2 = [];
             var nilaiAlokasi = 0 , nilaiRealisasi = 0 , nilaiSisa = 0;
             var percentRealisasi = 0 , percentSisa = 0;
             var len = result.length;
-            var ctx = $("#chartRealisasi_penalkes").get(0).getContext("2d");
+            // var ctx = $("#chartRealisasi_oblik").get(0).getContext("2d");
 
             for (var i = 0; i < len; i++) {
 
@@ -2348,35 +2169,44 @@
                 data2.push(percentSisa);
             }
 
-
-            var config = {
-                    type: 'pie',
-                    data: {
-                        datasets: [{
-                            label: "DATA",
-                            data: [
-                               data1,data2
-                            ],
-                            backgroundColor: [
-                                "blue",
-                                "red",
-                            ]
-                        }],
-                        labels: [
-                            "Realisasi",
-                            "Sisa Anggaran"
-                        ]
+            var myChart = Highcharts.chart('chartRealisasi_penalkes', {
+                   chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
                     },
-                    options: {
-                        responsive: true
-                    }
-                };
-
-            var myPieChart = new Chart(ctx, config);
+                    title: {
+                        text: 'REALISASI'
+                    },
+                    tooltip: {
+                        pointFormat: ''
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                connectorColor: 'silver'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Share',
+                        data: [
+                            { name: 'Alokasi', y: nilaiAlokasi },
+                            { name: 'Realisasi', y: nilaiRealisasi }
+                        ]
+                    }]
+                });
         });
-            // Realisasi Per Belanja
+        
+        // Realisasi Per Belanja
         $.getJSON('{{ url("/getjenisbelanjaeselondua/1") }}', function (result) {
 
+            // console.log(result[0]);
             var data51 = [] , data52 = [] , data53 = [] , namasatker = [] , jnsblnj = [];
 
             for (var i = 0; i < result['rkakl'].length; i++) {
@@ -2399,56 +2229,48 @@
                 jnsblnj.push(result['Jnsblj'][i].description);
             }
 
-            var data = {
-              labels: namasatker,
-              datasets: [{
-                label: jnsblnj[0],
-                backgroundColor: "blue",
-                data: data51
-              }, {
-                label: jnsblnj[1],
-                backgroundColor: "red",
-                data: data52
-              }, {
-                label: jnsblnj[2],
-                backgroundColor: "green",
-                data: data53
-              }]
-            };
+            // console.log(pagu);
 
-
-            var ctx = document.getElementById("chartbelanja_penalkes").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartbelanja_penalkes', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Per Belanja'
+                },
+                xAxis: {
+                    categories: namasatker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Belanja Pegawai',
+                    data: data51
+
+                }, {
+                    name: 'Belanja Barang',
+                    data: data52
+
+                }, {
+                    name: 'Belanja Modal',
+                    data: data53
+
+                }]
             });
         });
 
-        // pengadaan 
+        // pengadaan
         $.getJSON('{{ url("/get_pengadaaneselondua/2") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , nilai_kontrak = [] , pencairan = [] ;
 
@@ -2459,60 +2281,48 @@
                 pencairan.push(result[i].pencairan_kontrak);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: nama_satker,
-              datasets: [
-              {
-                label: "Alokasi",
-                backgroundColor: "blue",
-                data: alokasi,
-              },
-              {
-                label: "Nilai Kontrak",
-                backgroundColor: "yellow",
-                data: nilai_kontrak,
-              },
-              {
-                label: "Pencarian Kontrak",
-                backgroundColor: "green",
-                data: pencairan,
-              },]
-            };
-
-
-            var ctx = document.getElementById("chartpengadaan_penalkes").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartpengadaan_penalkes', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Pengadaan'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Nilai Kontrak',
+                    data: nilai_kontrak
+
+                }, {
+                    name: 'Pencairan Kontrak',
+                    data: pencairan
+
+                }]
             });
-        });
+        }); 
 
-
+        // SPM SP2D
         $.getJSON('{{ url("/get_spm/1") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker =[] , nilai_alokasi = [] , nilai_pengajuan = [] , nilai_spm = [] , nilai_sp2d = [];
 
@@ -2527,55 +2337,48 @@
 
                 }
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Pengajuan",
-                backgroundColor: "blue",
-                data: nilai_pengajuan
-              }, {
-                label: "SPM",
-                backgroundColor: "red",
-                data: nilai_spm
-              }, {
-                label: "SP2D",
-                backgroundColor: "green",
-                data: nilai_sp2d
-              }]
-            };
+            // console.log(pagu);
 
-
-            var ctx = document.getElementById("chartSPM_penalkes").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartSPM_penalkes', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi SPM SP2D'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Pengajuan',
+                    data: nilai_pengajuan
+
+                }, {
+                    name: 'SPM',
+                    data: nilai_spm
+
+                }, {
+                    name: 'SP2D',
+                    data: nilai_sp2d
+
+                }]
             });
         });
-            //Tupoksi Ses
+                
+        //Tupoksi Ses
         $.getJSON('{{ url("/get_tupoksi_eselon_dua/1") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , realisasi = [] ;
 
@@ -2585,52 +2388,44 @@
                 realisasi.push(result[i].realisasi);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Alokasi",
-                backgroundColor: "green",
-                data: alokasi,
-              },{
-                label: "Realisasi",
-                backgroundColor: "blue",
-                data: realisasi,
-              }]
-            };
-
-
-            var ctx = document.getElementById("chartTupoksi_penalkes").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartTupoksi_penalkes', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Tupoksi'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Realisasi',
+                    data: realisasi
+
+                }]
             });
         });
-            //Rm & Pnbp Ses
+        
+        //Rm & Pnbp Ses
         $.getJSON('{{ url("/realisasi_pnbp_eselon_dua/1") }}', function (result) {
+
+            // console.log(result[0]);
 
             var kode_satker = [] , alokasi_rm = [] , rm = [] ,alokasi_pnbp =[], pnbp = [];
 
@@ -2642,56 +2437,48 @@
                 pnbp.push(result[i].pnbp);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: kode_satker,
-              datasets: [{
-                label: "Alokasi RM",
-                backgroundColor: "green",
-                data: alokasi_rm,
-              },{
-                label: "Rupiah Murni",
-                backgroundColor: "blue",
-                data: rm,
-              },{
-                label: "Alokasi PNBP",
-                backgroundColor: "yellow",
-                data: alokasi_pnbp,
-              },{
-                label: "PNBP",
-                backgroundColor: "red",
-                data: pnbp,
-              }]
-            };
-
-
-            var ctx = document.getElementById("chartRm_penalkes").getContext("2d");
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartTupoksi_penalkes', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Tupoksi'
+                },
+                xAxis: {
+                    categories: kode_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi RM',
+                    data: alokasi_rm
+
+                }, {
+                    name: 'Rupiah Murni',
+                    data: rm
+
+                }, {
+                    name: 'Alokasi PNBP',
+                    data: alokasi_pnbp
+
+                }, {
+                    name: 'PNBP',
+                    data: pnbp
+
+                }]
             });
         });
+        
         // TAB wsalkes
                     // Grafik Line RPD , RPD Revisi , Realisasi
         $.getJSON('{{ url("/getrpdsummaryeselondua/2") }}', function (result) {
@@ -2767,11 +2554,12 @@
             //Grafik PIE Realisasi , Saldo
         $.getJSON('{{ url("/get_pie_realisasi_eselon_dua/2") }}', function (result) {
 
+            // console.log(result['pagu']);
             var data1 = [] , data2 = [];
             var nilaiAlokasi = 0 , nilaiRealisasi = 0 , nilaiSisa = 0;
             var percentRealisasi = 0 , percentSisa = 0;
             var len = result.length;
-            var ctx = $("#chartRealisasi_wasalkes").get(0).getContext("2d");
+            // var ctx = $("#chartRealisasi_oblik").get(0).getContext("2d");
 
             for (var i = 0; i < len; i++) {
 
@@ -2786,35 +2574,44 @@
                 data2.push(percentSisa);
             }
 
-
-            var config = {
-                    type: 'pie',
-                    data: {
-                        datasets: [{
-                            label: "DATA",
-                            data: [
-                               data1,data2
-                            ],
-                            backgroundColor: [
-                                "blue",
-                                "red",
-                            ]
-                        }],
-                        labels: [
-                            "Realisasi",
-                            "Sisa Anggaran"
-                        ]
+            var myChart = Highcharts.chart('chartRealisasi_wasalkes', {
+                   chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: null,
+                        plotShadow: false,
+                        type: 'pie'
                     },
-                    options: {
-                        responsive: true
-                    }
-                };
-
-            var myPieChart = new Chart(ctx, config);
+                    title: {
+                        text: 'REALISASI'
+                    },
+                    tooltip: {
+                        pointFormat: ''
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                connectorColor: 'silver'
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Share',
+                        data: [
+                            { name: 'Alokasi', y: nilaiAlokasi },
+                            { name: 'Realisasi', y: nilaiRealisasi }
+                        ]
+                    }]
+                });
         });
-            // Realisasi Per Belanja
+        
+        // Realisasi Per Belanja
         $.getJSON('{{ url("/getjenisbelanjaeselondua/2") }}', function (result) {
 
+            // console.log(result[0]);
             var data51 = [] , data52 = [] , data53 = [] , namasatker = [] , jnsblnj = [];
 
             for (var i = 0; i < result['rkakl'].length; i++) {
@@ -2837,56 +2634,48 @@
                 jnsblnj.push(result['Jnsblj'][i].description);
             }
 
-            var data = {
-              labels: namasatker,
-              datasets: [{
-                label: jnsblnj[0],
-                backgroundColor: "blue",
-                data: data51
-              }, {
-                label: jnsblnj[1],
-                backgroundColor: "red",
-                data: data52
-              }, {
-                label: jnsblnj[2],
-                backgroundColor: "green",
-                data: data53
-              }]
-            };
+            // console.log(pagu);
 
-
-            var ctx = document.getElementById("chartbelanja_wasalkes").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartbelanja_wasalkes', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Per Belanja'
+                },
+                xAxis: {
+                    categories: namasatker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Belanja Pegawai',
+                    data: data51
+
+                }, {
+                    name: 'Belanja Barang',
+                    data: data52
+
+                }, {
+                    name: 'Belanja Modal',
+                    data: data53
+
+                }]
             });
         });
 
         // pengadaan 
         $.getJSON('{{ url("/get_pengadaaneselondua/1") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , nilai_kontrak = [] , pencairan = [] ;
 
@@ -2897,59 +2686,48 @@
                 pencairan.push(result[i].pencairan_kontrak);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: nama_satker,
-              datasets: [
-              {
-                label: "Alokasi",
-                backgroundColor: "blue",
-                data: alokasi,
-              },
-              {
-                label: "Nilai Kontrak",
-                backgroundColor: "yellow",
-                data: nilai_kontrak,
-              },
-              {
-                label: "Pencarian Kontrak",
-                backgroundColor: "green",
-                data: pencairan,
-              },]
-            };
-
-
-            var ctx = document.getElementById("chartpengadaan_wasalkes").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartpengadaan_wasalkes', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Pengadaan'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Nilai Kontrak',
+                    data: nilai_kontrak
+
+                }, {
+                    name: 'Pencairan Kontrak',
+                    data: pencairan
+
+                }]
             });
         });
 
+        // SPM SP2D
         $.getJSON('{{ url("/get_spm/2") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker =[] , nilai_alokasi = [] , nilai_pengajuan = [] , nilai_spm = [] , nilai_sp2d = [];
 
@@ -2964,55 +2742,47 @@
 
                 }
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Pengajuan",
-                backgroundColor: "blue",
-                data: nilai_pengajuan
-              }, {
-                label: "SPM",
-                backgroundColor: "red",
-                data: nilai_spm
-              }, {
-                label: "SP2D",
-                backgroundColor: "green",
-                data: nilai_sp2d
-              }]
-            };
+            // console.log(pagu);
 
-
-            var ctx = document.getElementById("chartSPM_wasalkes").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartSPM_wasalkes', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi SPM SP2D'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Pengajuan',
+                    data: nilai_pengajuan
+
+                }, {
+                    name: 'SPM',
+                    data: nilai_spm
+
+                }, {
+                    name: 'SP2D',
+                    data: nilai_sp2d
+
+                }]
             });
         });
-            //Tupoksi Ses
+        //Tupoksi Ses
         $.getJSON('{{ url("/get_tupoksi_eselon_dua/2") }}', function (result) {
+
+            // console.log(result[0]);
 
             var nama_satker = [] , alokasi = [] , realisasi = [] ;
 
@@ -3022,52 +2792,43 @@
                 realisasi.push(result[i].realisasi);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: nama_satker,
-              datasets: [{
-                label: "Alokasi",
-                backgroundColor: "green",
-                data: alokasi,
-              },{
-                label: "Realisasi",
-                backgroundColor: "blue",
-                data: realisasi,
-              }]
-            };
-
-
-            var ctx = document.getElementById("chartTupoksi_wasalkes").getContext("2d");
-
-
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartTupoksi_wasalkes', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Tupoksi'
+                },
+                xAxis: {
+                    categories: nama_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi',
+                    data: alokasi
+
+                }, {
+                    name: 'Realisasi',
+                    data: realisasi
+
+                }]
             });
         });
-            //Rm & Pnbp Ses
+        //Rm & Pnbp Ses
         $.getJSON('{{ url("/realisasi_pnbp_eselon_dua/2") }}', function (result) {
+
+            // console.log(result[0]);
 
             var kode_satker = [] , alokasi_rm = [] , rm = [] ,alokasi_pnbp =[], pnbp = [];
 
@@ -3079,54 +2840,45 @@
                 pnbp.push(result[i].pnbp);
             }
 
+            // console.log(pagu);
 
-            var data = {
-              labels: kode_satker,
-              datasets: [{
-                label: "Alokasi RM",
-                backgroundColor: "green",
-                data: alokasi_rm,
-              },{
-                label: "Rupiah Murni",
-                backgroundColor: "blue",
-                data: rm,
-              },{
-                label: "Alokasi PNBP",
-                backgroundColor: "yellow",
-                data: alokasi_pnbp,
-              },{
-                label: "PNBP",
-                backgroundColor: "red",
-                data: pnbp,
-              }]
-            };
-
-
-            var ctx = document.getElementById("chartRm_wasalkes").getContext("2d");
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: data,
-              options: {
-                    tooltips: {
-                      callbacks: {
-                        label: function(tooltipItem, data) {
-                            return tooltipItem.yLabel.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                        },
-                    } 
-                    },
-                    barValueSpacing: 20, 
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                min: 0,
-                            }
-                        }],
-                        xAxes: [{
-                            ticks: {
-                            }
-                        }]
+            Highcharts.chart('chartRm_wasalkes', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Realisasi Rupiah Murni  & PNBP'
+                },
+                xAxis: {
+                    categories: kode_satker,
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
                     }
-                }
+                },
+                series: [{
+                    name: 'Alokasi RM',
+                    data: alokasi_rm
+
+                }, {
+                    name: 'Rupiah Murni',
+                    data: rm
+
+                }, {
+                    name: 'Alokasi PNBP',
+                    data: alokasi_pnbp
+
+                }, {
+                    name: 'PNBP',
+                    data: pnbp
+
+                }]
             });
         });
 

@@ -35,7 +35,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartbelanja_fm"></canvas>
+                    <!-- <canvas id="chartbelanja_fm"></canvas> -->
+                    <div id="chartbelanja_fm" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -56,7 +57,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartTupoksi_fm"></canvas>
+                    <!-- <canvas id="chartTupoksi_fm"></canvas> -->
+                    <div id="chartTupoksi_fm" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -77,7 +79,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartRm_fm"></canvas>
+                    <!-- <canvas id="chartRm_fm"></canvas> -->
+                    <div id="chartRm_fm" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -100,7 +103,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartRealisasi_fm"></canvas>
+                    <!-- <canvas id="chartRealisasi_fm"></canvas> -->
+                    <div id="chartRealisasi_fm" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -121,7 +125,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartSPM_fm"></canvas>
+                    <!-- <canvas id="chartSPM_fm"></canvas> -->
+                    <div id="chartSPM_fm" style="width:100%; height:400px;"></div>
                     
                     </div>
                     </div>
@@ -144,7 +149,8 @@
             <div class="box-body">
                 <div class="chart">
                 <div id="canvas-holder1" class="text-center" style="width: 100%">
-                <canvas id="chartpengadaan_fm"></canvas>
+                <!-- <canvas id="chartpengadaan_fm"></canvas> -->
+                <div id="chartpengadaan_fm" style="width:100%; height:400px;"></div>
                 
                 </div>
                 </div>

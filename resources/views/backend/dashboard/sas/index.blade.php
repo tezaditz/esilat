@@ -41,6 +41,9 @@
 <script type="text/javascript">
 
         $.getJSON('{{ url("/keuangan/sas/dashboard/sas/realisasi") }}', function (result) {
+
+            console.log(result['pagu']);
+
             var myChart = Highcharts.chart('container', {
                    chart: {
                         plotBackgroundColor: null,
@@ -76,6 +79,8 @@
         });
 
         $.getJSON('{{ url("/keuangan/sas/dashboard/sas/jnsbel") }}', function (result) {
+
+            console.log(result[0]);
             var dataPagu = [] , dataRealisasi = [] , dataCategori = [];
             for (var i = 0; i < result.length; i++) {
 
@@ -87,6 +92,9 @@
                 dataCategori.push(result[i].desc_jenis_belanja);
                 
             }
+
+            console.log(pagu);
+
             Highcharts.chart('realisasi_belanja', {
                 chart: {
                     type: 'column'
@@ -114,48 +122,6 @@
                 }, {
                     name: 'Realisasi',
                     data: dataRealisasi
-
-                }]
-            });
-        });
-
-        $.getJSON('{{ url("/keuangan/sas/dashboard/spm") }}', function (result) {
-
-            console.log(result);
-            var dataSPM = [] , dataSP2D = [] , dataSatker=[];
-            for (var i = 0; i < result.length; i++) {
-                dataSatker.push(result[i].satker);
-                dataSPM.push(result[i].spm);
-                dataSP2D.push(result[i].sp2d);
-            }            
-
-            Highcharts.chart('realisasi_spm_sp2d', {
-                chart: {
-                    type: 'column'
-                },
-                title: {
-                    text: 'Realisasi SPM SP2D'
-                },
-                xAxis: {
-                    categories: dataSatker,
-                    crosshair: true
-                },
-                yAxis: {
-                    min: 0,
-                },
-                plotOptions: {
-                    column: {
-                        pointPadding: 0.2,
-                        borderWidth: 0
-                    }
-                },
-                series: [{
-                    name: 'SPM',
-                    data: dataSPM
-
-                }, {
-                    name: 'SP2D',
-                    data: dataSP2D
 
                 }]
             });

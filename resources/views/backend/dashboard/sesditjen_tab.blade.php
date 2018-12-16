@@ -35,8 +35,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartbelanja_ses"></canvas>
-                    
+                    <!-- <canvas id="chartbelanja_ses"></canvas> -->
+                    <div id="chartbelanja_ses" style="width:100%;"></div>
                     </div>
                     </div>
                 </div>
@@ -56,8 +56,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartTupoksi_ses"></canvas>
-                    
+                    <!-- <canvas id="chartTupoksi_ses"></canvas> -->
+                    <div id="chartTupoksi_ses" style="width:100%;"></div>
                     </div>
                     </div>
                 </div>
@@ -77,8 +77,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartRm_ses"></canvas>
-                    
+                    <!-- <canvas id="chartRm_ses"></canvas> -->
+                    <div id="chartRm_ses" style="width:100%;"></div>
                     </div>
                     </div>
                 </div>
@@ -100,8 +100,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartRealisasi_ses"></canvas>
-                    
+                    <!-- <canvas id="chartRealisasi_ses"></canvas> -->
+                    <div id="chartRealisasi_ses" style="width:100%; "></div>
                     </div>
                     </div>
                 </div>
@@ -121,7 +121,8 @@
                 <div class="box-body">
                     <div class="chart">
                     <div id="canvas-holder1" class="text-center" style="width: 100%">
-                    <canvas id="chartSPM_ses"></canvas>
+                    <!-- <canvas id="chartSPM_ses"></canvas> -->
+                    <div id="chartSPM_ses" style="width:100%;"></div>
                     
                     </div>
                     </div>
@@ -143,8 +144,8 @@
             <div class="box-body">
                 <div class="chart">
                 <div id="canvas-holder1" class="text-center" style="width: 100%">
-                <canvas id="chartpengadaan_eseolon_dua"></canvas>
-                
+                <!-- <canvas id="chartpengadaan_eseolon_dua"></canvas> -->
+                <div id="chartpengadaan_eseolon_dua" style="width:100%;"></div>
                 </div>
                 </div>
             </div>

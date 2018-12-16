@@ -16,8 +16,10 @@ class DetailAkunController extends Controller
     public function detailAkun($kegiatan_id)
     {
         $d_akuns         = DetailAkun::where('kegiatan_id', $kegiatan_id)->Paginate(10);
+
         $total           = DetailAkun::where('kegiatan_id', $kegiatan_id)->get()->count();
         $detailkegiatans = DetailKegiatan::where('kegiatan_id', '=', $kegiatan_id)->get();
+        // return $d_akuns;
 
         return view('backend.pengajuan.kegiatan.detailakun.index', ['d_akuns' => $d_akuns, 'total' => $total, 'kegiatan_id' => $kegiatan_id, 'detailkegiatans' => $detailkegiatans]);
     }
